@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <link rel="shortcut icon" href="assets/Logo.png" type="image/x-icon" />
+    <script src="./libs/leaflet.rotatedMarker.js"></script>
+    <script src="./libs/leaflet.geodesic.js"></script>
+    <title>VATSIM Map</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="map"></div>
+    <div class="Hud" id="hud">
+      <div class="Details-Small Hidden" id="detailsSmall">
+        <div class="Main" id="detailsSmallContent"></div>
+        <span class="Expand" id="expand">CLICK TO EXPAND</span>
+      </div>
+      <div id="details" class="Details Hidden">
+        <div class="Header">
+          <div class="flex-column Nickname-Wrapper">
+            <span id="nickname">N/A</span>
+            <span id="callsign">N/A</span>
+          </div>
+          <span id="aircraft">N/A</span>
+        </div>
+        <div class="Route">
+          <div class="flex-column">
+            <span class="Label">Origin</span>
+            <span id="origin">N/A</span>
+          </div>
+          <div class="Progress">
+            <div id="progress"></div>
+            <div id="thumb">
+              <svg
+                width="22"
+                height="23"
+                viewBox="0 0 22 23"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.81978 23H6.59967C6.47707 23 6.35644 22.9628 6.24881 22.892C6.14118 22.8212 6.04998 22.719 5.98355 22.5947C5.91712 22.4704 5.87759 22.328 5.86856 22.1805C5.85953 22.0331 5.88129 21.8852 5.93186 21.7505L8.88634 13.8857L4.45004 13.7668L2.83209 16.1315C2.52362 16.5993 2.27749 16.8077 1.64956 16.8077H0.828214C0.698169 16.8127 0.569031 16.7799 0.451744 16.712C0.334458 16.644 0.232478 16.5429 0.154449 16.4174C0.0453632 16.2399 -0.061889 15.9391 0.0426132 15.5101L0.951049 11.5846C0.957925 11.5553 0.966175 11.526 0.975342 11.4972V11.4889C0.965876 11.4602 0.957766 11.4309 0.951049 11.401L0.0416965 7.45067C-0.0568473 7.02993 0.0508634 6.73579 0.159032 6.56274C0.231669 6.44648 0.325906 6.3524 0.434169 6.28806C0.542431 6.22372 0.661698 6.19093 0.782379 6.19231H1.64956C2.11845 6.19231 2.57358 6.44608 2.84126 6.85577L4.42575 9.18065L8.88634 9.10103L5.93278 1.25007C5.88214 1.11542 5.86029 0.967598 5.86923 0.820129C5.87816 0.67266 5.9176 0.530244 5.98393 0.405903C6.05027 0.281561 6.14138 0.179261 6.24894 0.108353C6.35651 0.037445 6.47709 0.000192066 6.59967 0H7.83307C8.00515 0.00417118 8.17423 0.0550463 8.32777 0.148848C8.48131 0.242649 8.61536 0.376967 8.71997 0.541827L14.4515 8.94567L17.0994 8.86163C17.2933 8.84892 17.8305 8.8445 17.9547 8.8445C20.4875 8.84615 22 9.83803 22 11.5C22 12.023 21.8267 12.9928 20.6676 13.6098C19.9833 13.9747 19.0703 14.1594 17.9537 14.1594C17.8309 14.1594 17.2951 14.155 17.0985 14.1422L14.4511 14.0571L8.7053 22.4609C8.6006 22.6251 8.46667 22.7587 8.3134 22.852C8.16013 22.9453 7.99143 22.9959 7.81978 23Z"
+                  fill="#1A1A1A"
+                />
+                <path
+                  d="M8.68711 19H7.79976C7.7106 19 7.62287 18.9758 7.54459 18.9296C7.46631 18.8834 7.39999 18.8167 7.35167 18.7357C7.30336 18.6546 7.27461 18.5618 7.26804 18.4656C7.26147 18.3694 7.2773 18.273 7.31408 18.1851L9.4628 13.0559L6.23639 12.9784L5.0597 14.5206C4.83536 14.8256 4.65636 14.9615 4.19968 14.9615H3.60234C3.50776 14.9648 3.41384 14.9434 3.32854 14.8991C3.24324 14.8548 3.16908 14.7889 3.11233 14.707C3.03299 14.5912 2.95499 14.3951 3.03099 14.1153L3.69167 11.5552C3.69667 11.5361 3.70267 11.5169 3.70934 11.4982V11.4928C3.70246 11.4741 3.69656 11.4549 3.69167 11.4355L3.03032 8.85913C2.95866 8.58474 3.03699 8.39291 3.11566 8.28005C3.16849 8.20423 3.23702 8.14287 3.31576 8.10091C3.3945 8.05895 3.48123 8.03756 3.569 8.03846H4.19968C4.54069 8.03846 4.8717 8.20397 5.06637 8.47115L6.21873 9.98738L9.4628 9.93546L7.31475 4.81526C7.27792 4.72745 7.26203 4.63104 7.26853 4.53487C7.27503 4.43869 7.30371 4.34581 7.35195 4.26472C7.40019 4.18363 7.46646 4.11691 7.54469 4.07066C7.62292 4.02442 7.71061 4.00013 7.79976 4H8.69678C8.82192 4.00272 8.94489 4.0359 9.05656 4.09707C9.16822 4.15825 9.26572 4.24585 9.34179 4.35337L13.5102 9.83414L15.4359 9.77933C15.5769 9.77103 15.9676 9.76815 16.0579 9.76815C17.9 9.76923 19 10.4161 19 11.5C19 11.8411 18.874 12.4736 18.031 12.876C17.5333 13.1139 16.8693 13.2344 16.0573 13.2344C15.9679 13.2344 15.5783 13.2315 15.4353 13.2232L13.5099 13.1677L9.33113 18.6484C9.25498 18.7555 9.15758 18.8427 9.04611 18.9035C8.93464 18.9644 8.81195 18.9973 8.68711 19Z"
+                  fill="#5AFF75"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="flex-column align-end">
+            <span class="Label">Destination</span>
+            <span id="destination">N/A</span>
+          </div>
+        </div>
+        <div class="DataRow">
+          <div class="align-start">
+            <span class="Title">Ground Speed</span>
+            <span class="Data" id="groundSpd">N/A</span>
+          </div>
+          <div>
+            <span class="Title">Heading</span>
+            <span class="Data" id="heading">N/A</span>
+          </div>
+          <div class="align-end">
+            <span class="Title">Altitude</span>
+            <span class="Data" id="alt">N/A</span>
+          </div>
+        </div>
+        <div class="DataRow">
+          <div class="Line"></div>
+          <div class="Title-Large">Distance</div>
+          <div class="Line"></div>
+        </div>
+        <div class="DataRow">
+          <div class="align-start">
+            <span class="Title">Total</span>
+            <span class="Data" id="distTotal">N/A</span>
+          </div>
+          <div>
+            <span class="Title">Covered</span>
+            <span class="Data" id="distCovered">N/A</span>
+          </div>
+          <div class="align-end">
+            <span class="Title">Remaining</span>
+            <span class="Data" id="distRemaining">N/A</span>
+          </div>
+        </div>
+        <span class="Title">Route</span>
+        <div class="Route-Box">
+          <div id="route">N/A</div>
+        </div>
+        <button id="track">TRACK FLIGHT</button>
+      </div>
+      <div class="Search">
+        <div class="InputWrapper">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5l-1.5 1.5l-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16A6.5 6.5 0 0 1 3 9.5A6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14S14 12 14 9.5S12 5 9.5 5"
+            />
+          </svg>
+          <input
+            type="text"
+            id="query"
+            placeholder="Search"
+            autocomplete="off"
+          />
+        </div>
+        <div class="PlayerCount pc2">
+          <span style="color: #14ff00; margin-bottom: 2px">●</span
+          ><span><span id="onlinePlayers2">N/A</span></span>
+        </div>
+      </div>
+      <div class="PlayerCount">
+        <span style="color: #14ff00; margin-bottom: 2px">●</span
+        ><span
+          ><span class="OnlineLabel">Online: </span
+          ><span id="onlinePlayers">N/A</span></span
+        >
+      </div>
+      <div id="loading" class="Loading Hidden">
+        <img src="./assets/Loading.png" />
+      </div>
+    </div>
+    <div class="Info">Click anywhere to stop tracking</div>
+    <script src="App.js" type="module"></script>
+  </body>
+</html>

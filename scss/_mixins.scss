@@ -1,0 +1,20 @@
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin box-styles {
+  background-color: $background-color;
+  border: 2px solid $border-color;
+  border-radius: 8px;
+  padding: 8px;
+  position: absolute;
+  z-index: 400;
+  gap: 8px;
+}
+
+@mixin position-center {
+  left: 50%;
+  transform: translateX(-50%);
+}

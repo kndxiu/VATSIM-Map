@@ -1,0 +1,466 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap");
+@import "./variables";
+@import "./mixins";
+@import "./media";
+@import "./animations";
+
+* {
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+body,
+html {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.Info {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: #cccccc;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+  z-index: 400;
+}
+
+.Hud {
+  position: absolute;
+  top: -100vh;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 400;
+  pointer-events: none;
+  transition: 0.2s ease;
+  opacity: 1;
+  visibility: visible;
+  &.Hidden {
+    opacity: 0;
+    visibility: hidden;
+    & + .Info {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+  * {
+    pointer-events: all;
+  }
+}
+
+#map {
+  width: 100vw;
+  height: 100vh;
+}
+
+.leaflet-container img[role="presentation"] {
+  width: 257px !important;
+  height: 257px !important;
+}
+
+.Tooltip {
+  background-color: $background-color;
+  /* backdrop-filter: blur(16px); */
+  border-radius: 4px;
+  border: 2px solid $border-color;
+  width: 200px;
+  box-shadow: none;
+  padding: 0;
+  &::before {
+    display: none;
+  }
+}
+
+.Name {
+  font-size: 20px;
+  color: $primary-color;
+  display: inline-block;
+  max-width: 85px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Callsign {
+  display: flex;
+  align-items: center;
+  text-align: right;
+  font-size: 14px;
+  color: $secondary-color;
+}
+
+label {
+  font-size: 14px;
+  color: #757575;
+  width: 100%;
+  margin-bottom: -8px;
+}
+
+.Departure,
+.Arrival {
+  display: flex;
+  flex-direction: column;
+  color: $secondary-color;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.Arrival label {
+  text-align: right;
+  font-weight: 500;
+}
+
+.Main {
+  padding: 8px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  &::after {
+    content: "✈︎••••";
+    position: absolute;
+    top: calc(100% - 20px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 4px;
+    color: $secondary-color;
+    animation: animation 2s infinite;
+  }
+}
+
+.Row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.Expand {
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  color: $secondary-color;
+  border-top: 2px solid $border-color;
+  padding: 4px;
+  font-weight: 500;
+}
+
+.PlayerCount {
+  @include flex-center;
+  @include box-styles;
+  top: 1rem;
+  right: 1rem;
+  font-weight: 500;
+  color: $primary-color;
+  gap: 0.5rem;
+  height: 48px;
+}
+
+.Search {
+  @include box-styles;
+  @include position-center;
+  max-width: 420px;
+  width: $width;
+  top: 1rem;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  color: #757575;
+  background: unset;
+  padding: unset;
+  border: unset;
+  .PlayerCount {
+    position: static;
+  }
+  .InputWrapper {
+    @include box-styles;
+    position: unset;
+    width: 100%;
+    gap: 4px;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    height: 48px;
+  }
+}
+
+.Search .PlayerCount.pc2 {
+  display: none;
+}
+
+input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  color: $primary-color;
+  font-size: 18px;
+  font-weight: 500;
+  &::placeholder {
+    color: #757575;
+  }
+}
+
+.Details {
+  @include box-styles;
+  @include position-center;
+  transition: 0.25s ease;
+  max-width: 420px;
+  width: $width;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  bottom: 1rem;
+  font-weight: 600;
+  &.Hidden {
+    bottom: -100%;
+  }
+  .Header {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  &-Small {
+    @include box-styles;
+    @include position-center;
+    bottom: 1rem;
+    transition: 0.2s ease;
+    width: $width;
+    max-width: 420px;
+    padding: unset;
+    &.Hidden {
+      bottom: -100vh;
+    }
+    .Name {
+      font-size: 24px;
+      max-width: 100%;
+    }
+    .Callsign {
+      font-size: 18px;
+    }
+    label {
+      font-size: 16px;
+    }
+    .Waypoint {
+      font-size: 24px;
+    }
+    .Main {
+      &::after {
+        font-size: 18px;
+        letter-spacing: 10px;
+      }
+    }
+    .Expand {
+      cursor: pointer;
+      padding: 0.5rem;
+      font-size: 16px;
+    }
+  }
+}
+
+.Nickname-Wrapper {
+  width: 100%;
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+}
+
+#nickname {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 32px;
+  line-height: 32px;
+  color: $primary-color;
+}
+
+#callsign {
+  font-size: 16px;
+  line-height: 16px;
+  color: $secondary-color;
+}
+
+#aircraft {
+  color: $secondary-color;
+  font-size: 16px;
+}
+
+.Route {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  * {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.DataRow {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  * {
+    @include flex-center;
+    width: 100%;
+    flex-direction: column;
+  }
+  &:first-child {
+    text-align: start;
+  }
+  &:last-child {
+    text-align: end;
+  }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.align-end * {
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-self: flex-end;
+  justify-self: flex-end;
+}
+
+.align-start * {
+  justify-content: flex-start;
+  align-items: start;
+  align-self: flex-start;
+  justify-self: flex-start;
+}
+
+.Title {
+  font-size: 16px;
+  color: $secondary-color;
+  &-Large {
+    font-size: 24px;
+    color: $primary-color;
+  }
+}
+
+.Line {
+  width: 100%;
+  height: 2px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+}
+
+.Label {
+  font-size: 12px;
+  line-height: 12px;
+  color: $secondary-color;
+}
+
+#origin,
+#destination {
+  font-size: 38px;
+  line-height: 34px;
+  color: $primary-color;
+}
+
+.Progress {
+  border-radius: 10px;
+  align-self: center;
+  height: 3px;
+  background-color: #5e5e5e;
+  position: relative;
+}
+
+#progress {
+  transition: 0.2s ease;
+  height: 3px;
+  width: 50%;
+  background-color: #5aff75;
+  border-radius: 10px;
+}
+
+#thumb {
+  transition: 0.2s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Data {
+  font-size: 24px;
+  color: $primary-color;
+}
+
+.Route-Box {
+  max-height: 60px;
+  background-color: #141414;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+#route {
+  max-height: calc(60px - 16px);
+  overflow: auto;
+  color: $primary-color;
+  font-size: 12px;
+  &::-webkit-scrollbar {
+    border-radius: 10px;
+    background-color: $border-color;
+    width: 2px;
+    overflow: hidden;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #757575;
+    border-radius: 10px;
+    width: 2px;
+  }
+}
+
+img.leaflet-marker-icon.active {
+  filter: hue-rotate(120deg) saturate(100) !important;
+}
+
+img.leaflet-marker-icon.sq {
+  filter: hue-rotate(-45deg) saturate(100);
+}
+
+.Loading {
+  @include flex-center;
+  position: absolute;
+  z-index: 400;
+  top: 1rem;
+  left: 1rem;
+  animation: loading 1s linear infinite;
+  transition: 0.2s ease;
+  pointer-events: none;
+  &.Hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+button {
+  background-color: #252525;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #cccccc;
+  border-radius: 4px;
+  transition: 0.2s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: lighten($color: #252525, $amount: 5);
+  }
+}

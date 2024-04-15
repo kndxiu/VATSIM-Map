@@ -1,0 +1,26 @@
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes animation {
+  0% {
+    content: "✈︎••••";
+  }
+  20% {
+    content: "•✈︎•••";
+  }
+  40% {
+    content: "••✈︎••";
+  }
+  60% {
+    content: "•••✈︎•";
+  }
+  80% {
+    content: "••••✈︎";
+  }
+}
