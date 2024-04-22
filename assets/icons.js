@@ -129,6 +129,21 @@ const icons = {
     iconSize: [28, 28],
     iconAnchor: [14, 14],
   }),
+  B1: L.icon({
+    iconUrl: "./assets/B1.svg",
+    iconSize: [24, 24],
+    iconAnchor: [13, 13],
+  }),
+  B52: L.icon({
+    iconUrl: "./assets/B52.svg",
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+  }),
+  A225: L.icon({
+    iconUrl: "./assets/A225.svg",
+    iconSize: [34, 34],
+    iconAnchor: [17, 17],
+  }),
 };
 
 export default icons;
