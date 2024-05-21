@@ -16,6 +16,8 @@ const progress = document.getElementById("progress");
 const thumb = document.getElementById("thumb");
 const details = document.getElementById("details");
 const loading = document.getElementById("loading");
+const search = document.getElementById("query");
+const searchResults = document.getElementById("searchResults");
 
 let tracking = false;
 let lastPos;
@@ -39,8 +41,9 @@ expand.addEventListener("click", () => {
 let isMobile =
   navigator.maxTouchPoints || "ontouchstart" in document.documentElement;
 
-import airports from "../data/airports.js";
-import icons from "../assets/icons.js";
+import airports from "./data/airports.js";
+import countries from "./data/countries.js";
+import icons from "./assets/icons.js";
 
 const setDetailsVisibility = (bool) => {
   if (!isMobile) {
@@ -228,6 +231,49 @@ const init = () => {
       airportMarkers = [];
     }
     setDetailsVisibility(active);
+  });
+
+  search.addEventListener("focusout", () => {
+    searchResults.classList.add("hidden");
+  });
+
+  search.addEventListener("keydown", (e) => {
+    if (e.keyCode == 13) {
+      searchResults.classList.remove("hidden");
+      const query = search.value;
+      const results = Object.values(airports).filter(
+        (airport) =>
+          airport.icao.toLowerCase().startsWith(query.toLowerCase()) &&
+          getAirportFlights(airport.icao).length > 0
+      );
+
+      results.forEach((airport) => {
+        airport.flights = getAirportFlights(airport.icao);
+      });
+
+      results.sort((a, b) => b.flights.length - a.flights.length);
+
+      searchResults.innerHTML = "";
+      results.forEach((result) => {
+        const el = `
+          <div class="ResultRow">
+          <div class="Img">
+            <img
+              src="https://raw.githubusercontent.com/swantzter/square-flags/master/png/1x1/256/${result.country.toLowerCase()}.png"
+              width="42"
+            />
+          </div>
+          <div class="Data">
+            <span class="DataTitle">${result.icao}</span>
+            <span class="DataDesc">${result.name}</span>
+          </div>
+          <div class="AirportFlights">${result.flights.length} flights</div>
+        </div>
+        `;
+
+        searchResults.innerHTML += el;
+      });
+    }
   });
 };
 
@@ -450,6 +496,19 @@ const addMarkers = () => {
       createMarker(pilot, inBounds[1]);
     }
   });
+};
+
+const getAirportFlights = (icao) => {
+  const flights = [];
+
+  data["pilots"].forEach((pilot) => {
+    const flightPlan = pilot["flight_plan"];
+    if (flightPlan) {
+      if (flightPlan["departure"] == icao || flightPlan["arrival"] == icao)
+        flights.push(pilot);
+    }
+  });
+  return flights;
 };
 
 const getIndex = (id) => {

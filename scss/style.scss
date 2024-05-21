@@ -7,6 +7,18 @@
 * {
   box-sizing: border-box;
   font-family: "Outfit", sans-serif;
+
+  &::-webkit-scrollbar {
+    border-radius: 10px;
+    background-color: $border-color;
+    width: 2px;
+    overflow: hidden;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #757575;
+    border-radius: 10px;
+    width: 2px;
+  }
 }
 
 body,
@@ -189,6 +201,67 @@ label {
     align-items: center;
     font-size: 24px;
     height: 48px;
+  }
+  &Results {
+    &.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb {
+      width: 4px;
+    }
+    opacity: 1;
+    visibility: visible;
+    @include box-styles;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    transition: 0.2s ease;
+    max-height: calc(100svh - 48px - 2rem - 8px);
+    overflow-y: auto;
+    & .ResultRow {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background-color: #1a1a1a;
+      transition: 0.2s ease;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: #2a2a2a;
+      }
+      & .Img {
+        height: 42px;
+        img {
+          border-radius: 4px;
+        }
+      }
+      .Data {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        &Title {
+          font-weight: 500;
+          font-size: 18px;
+          color: #dddddd;
+        }
+        &Desc {
+          font-weight: 500;
+          font-size: 12px;
+          color: #aaaaaa;
+        }
+      }
+
+      .AirportFlights {
+        font-weight: 500;
+        font-size: 12px;
+        color: #aaaaaa;
+        white-space: nowrap;
+      }
+    }
   }
 }
 
@@ -414,17 +487,6 @@ input {
   overflow: auto;
   color: $primary-color;
   font-size: 12px;
-  &::-webkit-scrollbar {
-    border-radius: 10px;
-    background-color: $border-color;
-    width: 2px;
-    overflow: hidden;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #757575;
-    border-radius: 10px;
-    width: 2px;
-  }
 }
 
 img.leaflet-marker-icon.active {

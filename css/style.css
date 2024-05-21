@@ -47,6 +47,17 @@
   box-sizing: border-box;
   font-family: "Outfit", sans-serif;
 }
+*::-webkit-scrollbar {
+  border-radius: 10px;
+  background-color: #252525;
+  width: 2px;
+  overflow: hidden;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #757575;
+  border-radius: 10px;
+  width: 2px;
+}
 
 body,
 html {
@@ -252,6 +263,71 @@ label {
   align-items: center;
   font-size: 24px;
   height: 48px;
+}
+.SearchResults {
+  opacity: 1;
+  visibility: visible;
+  background-color: #1a1a1a;
+  border: 2px solid #252525;
+  border-radius: 8px;
+  padding: 8px;
+  position: absolute;
+  z-index: 400;
+  gap: 8px;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  transition: 0.2s ease;
+  max-height: calc(100svh - 48px - 2rem - 8px);
+  overflow-y: auto;
+}
+.SearchResults.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.SearchResults::-webkit-scrollbar, .SearchResults::-webkit-scrollbar-thumb {
+  width: 4px;
+}
+.SearchResults .ResultRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background-color: #1a1a1a;
+  transition: 0.2s ease;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.SearchResults .ResultRow:hover {
+  background-color: #2a2a2a;
+}
+.SearchResults .ResultRow .Img {
+  height: 42px;
+}
+.SearchResults .ResultRow .Img img {
+  border-radius: 4px;
+}
+.SearchResults .ResultRow .Data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+.SearchResults .ResultRow .DataTitle {
+  font-weight: 500;
+  font-size: 18px;
+  color: #dddddd;
+}
+.SearchResults .ResultRow .DataDesc {
+  font-weight: 500;
+  font-size: 12px;
+  color: #aaaaaa;
+}
+.SearchResults .ResultRow .AirportFlights {
+  font-weight: 500;
+  font-size: 12px;
+  color: #aaaaaa;
+  white-space: nowrap;
 }
 
 .Search .PlayerCount.pc2 {
@@ -493,17 +569,6 @@ input::placeholder {
   overflow: auto;
   color: #dddddd;
   font-size: 12px;
-}
-#route::-webkit-scrollbar {
-  border-radius: 10px;
-  background-color: #252525;
-  width: 2px;
-  overflow: hidden;
-}
-#route::-webkit-scrollbar-thumb {
-  background-color: #757575;
-  border-radius: 10px;
-  width: 2px;
 }
 
 img.leaflet-marker-icon.active {
