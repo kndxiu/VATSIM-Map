@@ -1,4 +1,9 @@
 const icons = {
+  airport: L.icon({
+    iconUrl: "./assets/airport.svg",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+  }),
   departure: L.icon({
     iconUrl: "./assets/departure.svg",
     iconSize: [32, 32],

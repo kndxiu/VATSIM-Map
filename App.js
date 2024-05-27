@@ -30,12 +30,22 @@ track.addEventListener("click", () => {
   getData();
 });
 
+const toggleVisibility = (elements, shouldShow) => {
+  elements.forEach((element) => {
+    if (shouldShow) {
+      element.classList.remove("Hidden");
+    } else {
+      element.classList.add("Hidden");
+    }
+  });
+};
+
 const detailsSmall = document.getElementById("detailsSmall");
 const detailsSmallContent = document.getElementById("detailsSmallContent");
 const expand = document.getElementById("expand");
 expand.addEventListener("click", () => {
-  detailsSmall.classList.add("Hidden");
-  details.classList.remove("Hidden");
+  toggleVisibility([details], true);
+  toggleVisibility([detailsSmall], false);
 });
 
 let isMobile =
@@ -47,15 +57,14 @@ import icons from "./assets/icons.js";
 
 const setDetailsVisibility = (bool) => {
   if (!isMobile) {
-    if (bool != null) details.classList.remove("Hidden");
-    else details.classList.add("Hidden");
+    if (bool != null) toggleVisibility([details], true);
+    else toggleVisibility([details], false);
   } else {
     if (bool != null) {
-      details.classList.add("Hidden");
-      detailsSmall.classList.remove("Hidden");
+      toggleVisibility([details], false);
+      toggleVisibility([detailsSmall], true);
     } else {
-      details.classList.add("Hidden");
-      detailsSmall.classList.add("Hidden");
+      toggleVisibility([details, detailsSmall], false);
     }
   }
 };
@@ -145,6 +154,7 @@ const updateContent = (data) => {
 let stats = {};
 
 const markers = [];
+let globalAirports = [];
 let airportMarkers = [];
 let map;
 let data = [];
@@ -152,10 +162,13 @@ let data = [];
 const playerCount = document.getElementById("onlinePlayers");
 const playerCount2 = document.getElementById("onlinePlayers2");
 
-window.onload = function () {
+const initializeApp = () => {
   init();
   getData();
+  setInterval(getData, 15 * 1000);
 };
+
+window.onload = initializeApp;
 
 let active, departure, arrival;
 
@@ -191,6 +204,56 @@ const init = () => {
     bounds = L.latLngBounds(southWest, northEast);
   map.setMaxBounds(bounds);
 
+  Object.values(airports).forEach((airport) => {
+    const pos = L.latLng(airport["lat"], airport["lon"]);
+    const marker = L.marker(pos, {
+      id: airport["icao"],
+      icon: icons["airport"],
+      airport,
+      forceZIndex: 100,
+    });
+
+    if (!isMobile) {
+      const content = `
+      <div class="Main Airport">
+        <div class="Row">
+          <span class="Name">${airport["icao"]}${
+        airport["iata"] ? "/" + airport["iata"] : ""
+      }</span>
+          <span class="Callsign">N/A</span>
+        </div>
+        <div class="Row">
+          <label>${airport["name"]}</label>
+        </div>
+        </div>
+      <span class="Expand">CLICK TO EXPAND</span>
+    `;
+
+      marker.bindTooltip(content, {
+        // sticky: true,
+        direction: "top",
+        className: "Tooltip",
+        offset: [0, -32],
+        opacity: 1,
+      });
+    }
+
+    marker.addEventListener("mouseover", () => {
+      marker.setOpacity(1);
+    });
+
+    marker.addEventListener("mouseout", () => {
+      marker.setOpacity(0.25);
+    });
+
+    marker.addEventListener("click", () => {
+      toggleVisibility([searchResults], false);
+      console.log(getAirportFlights(airport["icao"], true));
+    });
+
+    globalAirports.push(marker);
+  });
+
   // !!! ---------------------
 
   // dubaiMarker.addTo(map);
@@ -210,16 +273,26 @@ const init = () => {
 
   // !!! ---------------------
 
-  map.addEventListener("moveend", () => {
-    // markers.length == 0 ? addMarkers() : updateMarkers();
+  const handleMoveEnd = () => {
     getData();
-  });
+  };
 
-  map.addEventListener("click", () => {
+  const handleClick = () => {
     if (active && active._icon) active._icon.classList.remove("active");
+    resetActiveMarker();
+    resetAirportMarkers();
+    setDetailsVisibility(active);
+    toggleVisibility([searchResults], false);
+  };
+
+  const resetActiveMarker = () => {
+    if (active) active.setForceZIndex(200);
     active = null;
     tracking = null;
-    hud.classList.remove("Hidden");
+    toggleVisibility([hud], true);
+  };
+
+  const resetAirportMarkers = () => {
     if (departure) {
       departure.remove();
       departure = null;
@@ -230,32 +303,29 @@ const init = () => {
       arrival = null;
       airportMarkers = [];
     }
-    setDetailsVisibility(active);
-  });
-
-  search.addEventListener("focusout", () => {
-    searchResults.classList.add("hidden");
-  });
+  };
+  map.addEventListener("moveend", handleMoveEnd);
+  map.addEventListener("click", handleClick);
 
   search.addEventListener("keydown", (e) => {
     if (e.keyCode == 13) {
-      searchResults.classList.remove("hidden");
+      toggleVisibility([searchResults], true);
+      toggleVisibility([details, detailsSmall], false);
       const query = search.value;
       const results = Object.values(airports).filter(
         (airport) =>
           airport.icao.toLowerCase().startsWith(query.toLowerCase()) &&
           getAirportFlights(airport.icao).length > 0
       );
-
-      results.forEach((airport) => {
-        airport.flights = getAirportFlights(airport.icao);
-      });
-
-      results.sort((a, b) => b.flights.length - a.flights.length);
-
       searchResults.innerHTML = "";
-      results.forEach((result) => {
-        const el = `
+      if (results.length != 0) {
+        results.forEach((airport) => {
+          airport.flights = getAirportFlights(airport.icao);
+        });
+
+        results.sort((a, b) => b.flights.length - a.flights.length);
+        results.forEach((result) => {
+          const el = `
           <div class="ResultRow">
           <div class="Img">
             <img
@@ -271,8 +341,31 @@ const init = () => {
         </div>
         `;
 
-        searchResults.innerHTML += el;
-      });
+          searchResults.innerHTML += el;
+        });
+      } else searchResults.innerHTML = "<label>No results</label>";
+    }
+  });
+};
+
+const displayAirports = () => {
+  globalAirports.forEach((airport) => {
+    const pos = L.latLng(
+      airport["options"]["airport"]["lat"],
+      airport["options"]["airport"]["lon"]
+    );
+    const inBounds = fitsBounds(pos);
+    if (inBounds[0] && map.getZoom() >= 8) {
+      if (
+        !airport["_map"] &&
+        getAirportFlights(airport["options"]["airport"]["icao"]).length > 0
+      ) {
+        airport.setLatLng(inBounds[1]);
+        airport.addTo(map);
+        airport.setOpacity(0.25);
+      }
+    } else {
+      airport.remove();
     }
   });
 };
@@ -288,14 +381,15 @@ const getData = async () => {
     updating = true;
 
     try {
-      loading.classList.remove("Hidden");
+      displayAirports();
+      toggleVisibility([loading], true);
       const response = await fetch(link);
       const json = await response.json();
       data = json;
       markers.length == 0 ? addMarkers() : updateMarkers();
       updateUI();
       updating = false;
-      loading.classList.add("Hidden");
+      toggleVisibility([loading], false);
 
       if (active)
         updateContent(
@@ -304,7 +398,7 @@ const getData = async () => {
     } catch (error) {
       console.error("Błąd podczas pobierania danych:", error);
       updating = false;
-      loading.classList.add("hidden");
+      toggleVisibility([loading], false);
     }
     console.log(stats);
     if (tracking && active) {
@@ -314,9 +408,7 @@ const getData = async () => {
         (lastPos["lat"] != position["lat"] && lastPos["lng"] != position["lng"])
       ) {
         lastPos = position;
-        hud.classList.add("Hidden");
-        detailsSmall.classList.add("Hidden");
-        details.classList.add("Hidden");
+        toggleVisibility([hud, details, detailsSmall], false);
         map.flyTo(position);
       }
     }
@@ -363,6 +455,7 @@ const createMarker = (pilot, pos) => {
     icon: markerIcon,
     rotationAngle: heading,
     rotationOrigin: "center center",
+    forceZIndex: 200,
   });
   if (!markers[id]) {
     marker.addTo(map);
@@ -401,10 +494,10 @@ const createMarker = (pilot, pos) => {
       `;
 
       marker.bindTooltip(content, {
-        sticky: true,
+        // sticky: true,
         direction: "top",
         className: "Tooltip",
-        offset: [0, -4],
+        offset: [0, -8],
         opacity: 1,
       });
     }
@@ -413,12 +506,15 @@ const createMarker = (pilot, pos) => {
 
       const position = marker.getLatLng();
 
+      toggleVisibility([searchResults], false);
+
       active = marker;
+      active.setForceZIndex(250);
 
       if (tracking) {
         tracking = null;
 
-        hud.classList.remove("Hidden");
+        toggleVisibility([hud], true);
       }
 
       const flp = pilot["flight_plan"];
@@ -451,6 +547,7 @@ const createMarker = (pilot, pos) => {
           departure = L.marker([depAirport["lat"], depLon], {
             id: flp["departure"],
             icon: icons["departure"],
+            forceZIndex: 300,
           });
 
           airportMarkers.push(departure);
@@ -470,6 +567,7 @@ const createMarker = (pilot, pos) => {
           arrival = L.marker([arrAirport["lat"], arrLon], {
             id: flp["arrival"],
             icon: icons["arrival"],
+            forceZIndex: 300,
           });
 
           airportMarkers.push(arrival);
@@ -486,80 +584,71 @@ const createMarker = (pilot, pos) => {
   }
 };
 
+const matchesFilter = (data, filter) => {
+  return true;
+};
+
 const addMarkers = () => {
   const pilots = data["pilots"];
   pilots.forEach((pilot) => {
     const lat = pilot["latitude"];
     const long = pilot["longitude"];
     const inBounds = fitsBounds(L.latLng(lat, long));
-    if (inBounds[0]) {
+    if (inBounds[0] && matchesFilter(pilot, "")) {
       createMarker(pilot, inBounds[1]);
     }
   });
 };
 
-const getAirportFlights = (icao) => {
+const getAirportFlights = (icao, separate = false) => {
   const flights = [];
+  const separated = {
+    "departures": [],
+    "arrivals": [],
+  };
 
   data["pilots"].forEach((pilot) => {
     const flightPlan = pilot["flight_plan"];
     if (flightPlan) {
-      if (flightPlan["departure"] == icao || flightPlan["arrival"] == icao)
-        flights.push(pilot);
+      if (!separate) {
+        if (flightPlan["departure"] == icao || flightPlan["arrival"] == icao)
+          flights.push(pilot);
+      } else {
+        if (flightPlan["departure"] == icao)
+          separated["departures"].push(pilot);
+        else if (flightPlan["arrival"] == icao)
+          separated["arrivals"].push(pilot);
+      }
     }
   });
-  return flights;
+  return separate == false ? flights : separated;
 };
 
-const getIndex = (id) => {
-  markers.forEach((marker, index) => {
-    const pilotId = marker["data"]["cid"];
-    if (pilotId == id) {
-      return index;
+const updateVisibleMarkers = (pilots) => {
+  pilots.forEach((pilot) => {
+    const { cid: id, latitude: lat, longitude: long, heading } = pilot;
+    if (markers[id]) {
+      const marker = markers[id].marker;
+      marker.setLatLng(fitsBounds(L.latLng(lat, long))[1]);
+      marker.setRotationAngle(heading);
+      markers[id].data = pilot;
     }
   });
 };
 
-const cleanArray = (arr) => {
-  return arr.filter((element) => {
-    return element !== null;
+const removeInvisibleMarkers = () => {
+  markers.forEach((marker) => {
+    if (marker) {
+      const { latitude: lat, longitude: long } = marker["data"];
+      if (!fitsBounds(L.latLng(lat, long))[0]) {
+        marker["marker"].remove();
+        markers[marker["data"]["cid"]] = null;
+      }
+    }
   });
 };
 
-const updateMarkers = () => {
-  const pilots = data["pilots"];
-  if (pilots) {
-    // ! Update Position Of All Previously Visible Markers
-    pilots.forEach((pilot) => {
-      const id = pilot["cid"];
-      const lat = pilot["latitude"];
-      const long = pilot["longitude"];
-      const heading = pilot["heading"];
-
-      if (markers[id]) {
-        const marker = markers[id].marker;
-        marker.setLatLng(fitsBounds(L.latLng(lat, long))[1]);
-        marker.setRotationAngle(heading);
-        markers[id].data = pilot;
-      }
-    });
-    // ! Remove No Longer Visible Markers
-    markers.forEach((marker) => {
-      if (marker) {
-        const lat = marker["data"]["latitude"];
-        const long = marker["data"]["longitude"];
-
-        if (!fitsBounds(L.latLng(lat, long))[0]) {
-          const mapMarker = marker["marker"];
-          mapMarker.remove();
-          markers[marker["data"]["cid"]] = null;
-        }
-      }
-    });
-    // ! Add Markers That Will Be Visible
-    addMarkers();
-  }
-
+const updateAirportMarkers = () => {
   airportMarkers.forEach((marker) => {
     const originalPosition = L.latLng([
       airports[marker.options.id].lat,
@@ -573,6 +662,42 @@ const updateMarkers = () => {
       marker.setLatLng(newPosition);
     }
   });
+};
+
+const updateAirportTooltips = () => {
+  globalAirports.forEach((airport) => {
+    const airportData = airport["options"]["airport"];
+    const content = `
+      <div class="Main Airport">
+        <div class="Row">
+          <span class="Name">${airportData["icao"]}${
+      airportData["iata"] ? "/" + airportData["iata"] : ""
+    }</span>
+          <span class="Callsign">${
+            getAirportFlights(airportData["icao"]).length
+          } flights</span>
+        </div>
+        <div class="Row">
+          <label>${airportData["name"]}</label>
+        </div>
+        </div>
+      <span class="Expand">CLICK TO EXPAND</span>
+    `;
+
+    airport.setTooltipContent(content);
+  });
+};
+
+const updateMarkers = () => {
+  const pilots = data["pilots"];
+  if (pilots) {
+    updateVisibleMarkers(pilots);
+    removeInvisibleMarkers();
+    addMarkers();
+    if (!isMobile) updateAirportTooltips();
+  }
+
+  updateAirportMarkers();
 };
 
 const fitsBounds = (pos) => {

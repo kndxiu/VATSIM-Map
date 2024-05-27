@@ -184,6 +184,20 @@ label {
   color: #aaaaaa;
   animation: animation 2s infinite;
 }
+.Main.Airport .Row:first-child {
+  margin-bottom: -8px;
+}
+.Main.Airport .Name {
+  max-width: 100%;
+}
+.Main.Airport label {
+  text-overflow: ellipsis;
+  max-width: 184px;
+  overflow: hidden;
+}
+.Main.Airport::after {
+  display: none;
+}
 
 .Row {
   display: flex;
@@ -281,7 +295,7 @@ label {
   max-height: calc(100svh - 48px - 2rem - 8px);
   overflow-y: auto;
 }
-.SearchResults.hidden {
+.SearchResults.Hidden {
   opacity: 0;
   visibility: hidden;
 }
@@ -609,4 +623,4 @@ button {
 }
 button:hover {
   background-color: #323232;
-}/*# sourceMappingURL=style.css.map */
+}

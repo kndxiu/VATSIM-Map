@@ -10,7 +10,8 @@
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <link rel="shortcut icon" href="assets/Logo.png" type="image/x-icon" />
     <script src="./libs/leaflet.rotatedMarker.js"></script>
-    <script src="./libs/leaflet.geodesic.js"></script>
+    <script src="./libs/leaflet.forceZIndex.js"></script>
+    <!-- <script src="./libs/leaflet.geodesic.js"></script> -->
     <title>VATSIM Map</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -119,7 +120,7 @@
             autocomplete="off"
           />
         </div>
-        <div class="SearchResults hidden" id="searchResults"></div>
+        <div class="SearchResults Hidden" id="searchResults"></div>
         <div class="PlayerCount pc2">
           <span style="color: #14ff00; margin-bottom: 2px">●</span
           ><span><span id="onlinePlayers2">N/A</span></span>
@@ -132,6 +133,26 @@
           ><span id="onlinePlayers">N/A</span></span
         >
       </div>
+      <!-- <div class="Airport">
+        <div class="Airport_Header">
+          <div class="Img">
+            <img
+              src="https://raw.githubusercontent.com/swantzter/square-flags/master/png/1x1/256/pl.png"
+            />
+          </div>
+          <div class="Airport_Details">
+            <div class="Airport_Code">EPGD</div>
+            <div class="Airport_Name">Gdansk Lech Walesa Airport</div>
+          </div>
+          <div class="Switch">
+            <div class="Option">Departures</div>
+            <div class="Option">Arrivals</div>
+          </div>
+          <div class="Airport_Content">
+            <div class="Airport_Item"></div>
+          </div>
+        </div>
+      </div> -->
       <div id="loading" class="Loading Hidden">
         <img src="./assets/Loading.png" />
       </div>

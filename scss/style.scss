@@ -145,6 +145,22 @@ label {
     color: $secondary-color;
     animation: animation 2s infinite;
   }
+  &.Airport {
+    .Row:first-child {
+      margin-bottom: -8px;
+    }
+    .Name {
+      max-width: 100%;
+    }
+    label {
+      text-overflow: ellipsis;
+      max-width: calc(200px - 16px);
+      overflow: hidden;
+    }
+    &::after {
+      display: none;
+    }
+  }
 }
 
 .Row {
@@ -203,7 +219,7 @@ label {
     height: 48px;
   }
   &Results {
-    &.hidden {
+    &.Hidden {
       opacity: 0;
       visibility: hidden;
     }
