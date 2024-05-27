@@ -1,20 +1,26 @@
 @media (max-width: 825px) {
   .OnlineLabel {
-    display: none !important;
+    display: none;
   }
 }
 
 @media (max-width: 650px) {
   .PlayerCount {
-    display: none !important;
+    display: none;
   }
   .PlayerCount.pc2 {
-    display: flex !important;
+    display: flex;
+  }
+
+  .Airport {
+    right: 50%;
+    transform: translateX(50%);
+    max-width: 420px;
   }
 }
 
 @media (max-width: 550px) {
   .Loading {
-    top: calc(1rem + 48px + 8px) !important;
+    top: calc(1rem + 48px + 8px);
   }
 }

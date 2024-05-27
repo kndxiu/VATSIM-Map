@@ -1,23 +1,5 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap");
-@media (max-width: 825px) {
-  .OnlineLabel {
-    display: none !important;
-  }
-}
-@media (max-width: 650px) {
-  .PlayerCount {
-    display: none !important;
-  }
-  .PlayerCount.pc2 {
-    display: flex !important;
-  }
-}
-@media (max-width: 550px) {
-  .Loading {
-    top: calc(1rem + 48px + 8px) !important;
-  }
-}
 @keyframes loading {
   0% {
     transform: rotate(0deg);
@@ -230,6 +212,7 @@ label {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   top: 1rem;
   right: 1rem;
   font-weight: 500;
@@ -246,9 +229,9 @@ label {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   left: 50%;
   transform: translateX(-50%);
-  max-width: 420px;
   width: calc(100% - 32px);
   top: 1rem;
   display: flex;
@@ -270,6 +253,7 @@ label {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   position: unset;
   width: 100%;
   gap: 4px;
@@ -288,6 +272,7 @@ label {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   top: calc(100% + 8px);
   left: 0;
   width: 100%;
@@ -344,6 +329,110 @@ label {
   white-space: nowrap;
 }
 
+.AirportDetails {
+  background-color: #1a1a1a;
+  border: 2px solid #252525;
+  border-radius: 8px;
+  padding: 8px;
+  position: absolute;
+  z-index: 400;
+  gap: 8px;
+  max-width: 420px;
+  top: calc(1rem + 48px + 8px);
+  right: 1rem;
+  width: calc(100% - 32px);
+  max-width: 300px;
+  display: flex;
+  max-height: calc(100svh - 48px - 2rem);
+  flex-direction: column;
+}
+.AirportDetails_Header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.AirportDetails_Header .Img {
+  overflow: hidden;
+  border-radius: 4px;
+  border: 2px solid #252525;
+  width: 40px;
+  height: 40px;
+}
+.AirportDetails_Header .Img img {
+  width: 40px;
+  height: 40px;
+}
+.AirportDetails_Code {
+  font-size: 24px;
+  font-weight: 500;
+  color: #dddddd;
+  margin-bottom: -4px;
+}
+.AirportDetails_Name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #aaaaaa;
+}
+.AirportDetails .Switch {
+  width: 100%;
+  padding: 8px;
+  background: #1f1f1f;
+  border-radius: 6px;
+  display: flex;
+  gap: 8px;
+}
+.AirportDetails .Switch .Option {
+  text-align: center;
+  font-weight: 600;
+  color: #aaaaaa;
+  background-color: #1f1f1f;
+  border-radius: 4px;
+  width: 100%;
+  height: 24px;
+}
+.AirportDetails .Switch .Option.Selected {
+  background-color: #2a2a2a;
+  color: #dddddd;
+}
+.AirportDetails_Content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+.AirportDetails_Content::-webkit-scrollbar, .AirportDetails_Content::-webkit-scrollbar-thumb {
+  width: 4px;
+}
+.AirportDetails_Item {
+  background-color: #2a2a2a;
+  padding: 8px;
+  border-radius: 6px;
+}
+.AirportDetails_Item_Row {
+  display: flex;
+  gap: 8px;
+}
+.AirportDetails_Item_Name {
+  font-weight: 500;
+  color: #dddddd;
+  font-size: 16px;
+}
+.AirportDetails_Item_Flight, .AirportDetails_Item_Aircraft {
+  border: 2px solid #555555;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #aaaaaa;
+  font-weight: 500;
+}
+.AirportDetails_Item_Destination {
+  color: #777777;
+  font-size: 12px;
+}
+.AirportDetails_Item_Destination span {
+  color: #cccccc;
+}
+
 .Search .PlayerCount.pc2 {
   display: none;
 }
@@ -372,10 +461,10 @@ input::placeholder {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   left: 50%;
   transform: translateX(-50%);
   transition: 0.25s ease;
-  max-width: 420px;
   width: calc(100% - 32px);
   display: flex;
   flex-direction: column;
@@ -402,12 +491,12 @@ input::placeholder {
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
   left: 50%;
   transform: translateX(-50%);
   bottom: 1rem;
   transition: 0.2s ease;
   width: calc(100% - 32px);
-  max-width: 420px;
   padding: unset;
 }
 .Details-Small.Hidden {
@@ -624,3 +713,27 @@ button {
 button:hover {
   background-color: #323232;
 }
+
+@media (max-width: 825px) {
+  .OnlineLabel {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  .PlayerCount {
+    display: none;
+  }
+  .PlayerCount.pc2 {
+    display: flex;
+  }
+  .Airport {
+    right: 50%;
+    transform: translateX(50%);
+    max-width: 420px;
+  }
+}
+@media (max-width: 550px) {
+  .Loading {
+    top: calc(1rem + 48px + 8px);
+  }
+}/*# sourceMappingURL=style.css.map */

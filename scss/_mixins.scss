@@ -12,6 +12,7 @@
   position: absolute;
   z-index: 400;
   gap: 8px;
+  max-width: 420px;
 }
 
 @mixin position-center {
