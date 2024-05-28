@@ -238,7 +238,11 @@ const displayAirportDetails = (airport) => {
       }
       const el = document.createElement("div");
       el.addEventListener("click", () => {
-        map.flyTo(L.latLng(flight["latitude"], flight["longitude"]));
+        const pos = L.latLng(flight["latitude"], flight["longitude"]);
+        map.flyTo(pos);
+        if (active && active._icon) active._icon.classList.remove("active");
+        active = createMarker(flight, pos);
+        console.log(active);
         toggleVisibility([airportDetails], false);
         updateContent(flight);
         setDetailsVisibility(true);
