@@ -26,6 +26,10 @@ html {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  width: 100dvw;
+  height: 100dvh;
+  max-width: 100dvw;
+  max-height: 100dvh;
 }
 
 .Info {
@@ -443,7 +447,7 @@ input {
   bottom: 1rem;
   font-weight: 600;
   &.Hidden {
-    bottom: -100%;
+    bottom: calc(-500px - 100%);
   }
   .Header {
     width: 100%;
