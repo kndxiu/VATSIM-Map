@@ -240,9 +240,14 @@ const displayAirportDetails = (airport) => {
       el.addEventListener("click", () => {
         const pos = L.latLng(flight["latitude"], flight["longitude"]);
         map.flyTo(pos);
-        if (active && active._icon) active._icon.classList.remove("active");
-        active = createMarker(flight, pos);
-        console.log(active);
+        if (markers[flight["cid"]]) {
+          active = markers[flight["cid"]]["marker"];
+          active._icon.classList.add("active");
+          active = markers[flight["cid"]]["marker"];
+        } else {
+          if (active && active._icon) active._icon.classList.remove("active");
+          active = createMarker(flight, pos, true);
+        }
         toggleVisibility([airportDetails], false);
         updateContent(flight);
         setDetailsVisibility(true);
@@ -518,7 +523,7 @@ const updateUI = () => {
   playerCount2.innerHTML = `${data["general"]["unique_users"]}`;
 };
 
-const createMarker = (pilot, pos) => {
+const createMarker = (pilot, pos, _return = false) => {
   const id = pilot["cid"];
   const heading = pilot["heading"];
   const name = pilot["name"];
@@ -556,7 +561,8 @@ const createMarker = (pilot, pos) => {
     forceZIndex: 200,
   });
   if (!markers[id]) {
-    marker.addTo(map);
+    if (!_return) marker.addTo(map);
+    else return marker;
     if (active && id === active.options.id) {
       active = marker;
       active._icon.classList.add("active");
