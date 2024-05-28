@@ -133,59 +133,30 @@
           ><span id="onlinePlayers">N/A</span></span
         >
       </div>
-      <div class="AirportDetails">
+      <div class="AirportDetails Hidden" id="airport">
         <div class="AirportDetails_Header">
           <div class="Img">
-            <img
-              src="https://raw.githubusercontent.com/swantzter/square-flags/master/png/1x1/256/pl.png"
-            />
+            <img id="airportFlag" />
           </div>
           <div class="AirportDetails_Details">
-            <div class="AirportDetails_Code">EPGD</div>
-            <div class="AirportDetails_Name">Gdansk Lech Walesa Airport</div>
+            <div class="AirportDetails_Code" id="airportCode"></div>
+            <div class="AirportDetails_Name" id="airportName"></div>
           </div>
         </div>
-        <div class="Switch">
-          <div class="Option Selected">Departures</div>
-          <div class="Option">Arrivals</div>
+        <div class="Switch_Wrapper">
+          <div class="Switch" id="options">
+            <div class="Option Selected" data-value="dep">Departures</div>
+            <div class="Option" data-value="arr">Arrivals</div>
+          </div>
         </div>
-        <div class="AirportDetails_Content">
-          <div class="AirportDetails_Item">
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Name">kndxiu</div>
-              <div class="AirportDetails_Item_Flight">FR1234</div>
-              <div class="AirportDetails_Item_Aircraft">B737</div>
-            </div>
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Destination">
-                Going to <span>OMDB</span>
-              </div>
-            </div>
-          </div>
-          <div class="AirportDetails_Item">
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Name">kndxiu</div>
-              <div class="AirportDetails_Item_Flight">FR1234</div>
-              <div class="AirportDetails_Item_Aircraft">B737</div>
-            </div>
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Destination">
-                Going to <span>OMDB</span>
-              </div>
-            </div>
-          </div>
-          <div class="AirportDetails_Item">
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Name">kndxiu</div>
-              <div class="AirportDetails_Item_Flight">FR1234</div>
-              <div class="AirportDetails_Item_Aircraft">B737</div>
-            </div>
-            <div class="AirportDetails_Item_Row">
-              <div class="AirportDetails_Item_Destination">
-                Going to <span>OMDB</span>
-              </div>
-            </div>
-          </div>
+        <label id="flightCount">Active flights: 8</label>
+        <div class="AirportDetails_Wrapper">
+          <div class="AirportDetails_Content" id="airportDepartures"></div>
+          <div
+            class="AirportDetails_Content"
+            id="airportArrivals"
+            style="display: none"
+          ></div>
         </div>
       </div>
       <div id="loading" class="Loading Hidden">

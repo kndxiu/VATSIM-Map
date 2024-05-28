@@ -18,6 +18,34 @@ const details = document.getElementById("details");
 const loading = document.getElementById("loading");
 const search = document.getElementById("query");
 const searchResults = document.getElementById("searchResults");
+const airportDetails = document.getElementById("airport");
+const airportCode = document.getElementById("airportCode");
+const airportName = document.getElementById("airportName");
+const airportFlag = document.getElementById("airportFlag");
+const airportDepartures = document.getElementById("airportDepartures");
+const airportArrivals = document.getElementById("airportArrivals");
+const airportSwitch = document.getElementById("options");
+const flightCount = document.getElementById("flightCount");
+
+airportSwitch.querySelectorAll(".Option").forEach((option) => {
+  option.addEventListener("click", () => {
+    airportSwitch
+      .querySelector(".Option.Selected")
+      .classList.remove("Selected");
+
+    option.classList.add("Selected");
+
+    if (option.getAttribute("data-value") == "dep") {
+      airportDepartures.style.display = "flex";
+      airportArrivals.style.display = "none";
+      flightCount.innerText = `Active flights: ${airportDepartures.children.length}`;
+    } else {
+      airportDepartures.style.display = "none";
+      airportArrivals.style.display = "flex";
+      flightCount.innerText = `Active flights: ${airportArrivals.children.length}`;
+    }
+  });
+});
 
 let tracking = false;
 let lastPos;
@@ -178,6 +206,66 @@ let loop = setInterval(() => {
   getData();
 }, 15 * 1000);
 
+const displayAirportDetails = (airport) => {
+  airportSwitch.children[0].click();
+  toggleVisibility([airportDetails], true);
+  const flights = getAirportFlights(airport["icao"], true);
+
+  const flag = airport["country"];
+  const code = airport["icao"];
+  const name = airport["name"];
+
+  airportFlag.src = `https://raw.githubusercontent.com/swantzter/square-flags/master/png/1x1/256/${flag.toLowerCase()}.png`;
+  airportCode.innerText = code;
+  airportName.innerText = name;
+
+  airportDepartures.innerHTML = "";
+  airportArrivals.innerHTML = "";
+
+  flightCount.innerText = `Active flights: ${flights["departures"].length}`;
+
+  let keys = Object.keys(flights);
+
+  for (let i = 0; i < keys.length; i++) {
+    flights[keys[i]].forEach((flight) => {
+      let aircraft;
+      let dep = "N/A",
+        arr = "N/A";
+      if (flight["flight_plan"]) {
+        dep = flight["flight_plan"]["departure"];
+        arr = flight["flight_plan"]["arrival"];
+        aircraft = flight["flight_plan"]["aircraft_short"];
+      }
+      const el = document.createElement("div");
+      el.addEventListener("click", () => {
+        map.flyTo(L.latLng(flight["latitude"], flight["longitude"]));
+        toggleVisibility([airportDetails], false);
+        updateContent(flight);
+        setDetailsVisibility(true);
+      });
+      el.classList.add("AirportDetails_Item");
+      const content = `
+        <div class="AirportDetails_Item_Row">
+          <div class="AirportDetails_Item_Name">${flight["name"].slice(
+            0,
+            -5
+          )}</div>
+          <div class="AirportDetails_Item_Flight">${flight["callsign"]}</div>
+          <div class="AirportDetails_Item_Aircraft">${aircraft}</div>
+        </div>
+        <div class="AirportDetails_Item_Row">
+          <div class="AirportDetails_Item_Destination">
+            Going ${i == 0 ? "to" : "from"} <span>${i == 0 ? arr : dep}</span>
+          </div>
+        </div>
+      `;
+      el.innerHTML = content;
+      if (i == 0) airportDepartures.appendChild(el);
+      else airportArrivals.appendChild(el);
+    });
+  }
+};
+
 const init = () => {
   // !!! ---------------------
 
@@ -248,7 +336,7 @@ const init = () => {
 
     marker.addEventListener("click", () => {
       toggleVisibility([searchResults], false);
-      console.log(getAirportFlights(airport["icao"], true));
+      displayAirportDetails(airport);
     });
 
     globalAirports.push(marker);
@@ -282,7 +370,7 @@ const init = () => {
     resetActiveMarker();
     resetAirportMarkers();
     setDetailsVisibility(active);
-    toggleVisibility([searchResults], false);
+    toggleVisibility([searchResults, airportDetails], false);
   };
 
   const resetActiveMarker = () => {
@@ -308,9 +396,9 @@ const init = () => {
   map.addEventListener("click", handleClick);
 
   search.addEventListener("keydown", (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode == 13 && search.value.length > 0) {
       toggleVisibility([searchResults], true);
-      toggleVisibility([details, detailsSmall], false);
+      toggleVisibility([details, detailsSmall, airportDetails], false);
       const query = search.value;
       const results = Object.values(airports).filter(
         (airport) =>
@@ -325,8 +413,15 @@ const init = () => {
 
         results.sort((a, b) => b.flights.length - a.flights.length);
         results.forEach((result) => {
-          const el = `
-          <div class="ResultRow">
+          const el = document.createElement("div");
+          el.classList.add("ResultRow");
+          el.addEventListener("click", () => {
+            map.setView(L.latLng(result["lat"], result["lon"]), 8);
+            toggleVisibility([searchResults], false);
+            search.value = "";
+            displayAirportDetails(result);
+          });
+          const elContent = `
           <div class="Img">
             <img
               src="https://raw.githubusercontent.com/swantzter/square-flags/master/png/1x1/256/${result.country.toLowerCase()}.png"
@@ -338,10 +433,9 @@ const init = () => {
             <span class="DataDesc">${result.name}</span>
           </div>
           <div class="AirportFlights">${result.flights.length} flights</div>
-        </div>
         `;
-
-          searchResults.innerHTML += el;
+          el.innerHTML = elContent;
+          searchResults.appendChild(el);
         });
       } else searchResults.innerHTML = "<label>No results</label>";
     }
@@ -506,7 +600,7 @@ const createMarker = (pilot, pos) => {
 
       const position = marker.getLatLng();
 
-      toggleVisibility([searchResults], false);
+      toggleVisibility([searchResults, airportDetails], false);
 
       active = marker;
       active.setForceZIndex(250);
@@ -603,8 +697,8 @@ const addMarkers = () => {
 const getAirportFlights = (icao, separate = false) => {
   const flights = [];
   const separated = {
-    "departures": [],
-    "arrivals": [],
+    departures: [],
+    arrivals: [],
   };
 
   data["pilots"].forEach((pilot) => {
