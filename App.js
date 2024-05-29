@@ -27,10 +27,6 @@ const airportArrivals = document.getElementById("airportArrivals");
 const airportSwitch = document.getElementById("options");
 const flightCount = document.getElementById("flightCount");
 
-fetch("https://webassets.volanta.app/volanta-flight-positions.json")
-  .then((response) => response.json())
-  .then((data) => console.log(data));
-
 airportSwitch.querySelectorAll(".Option").forEach((option) => {
   option.addEventListener("click", () => {
     airportSwitch
