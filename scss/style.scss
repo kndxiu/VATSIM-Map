@@ -241,7 +241,7 @@ label {
       display: flex;
       gap: 8px;
       align-items: center;
-      background-color: #1a1a1a;
+      background-color: $background-color;
       transition: 0.2s ease;
       padding: 8px;
       border-radius: 4px;
@@ -263,19 +263,19 @@ label {
         &Title {
           font-weight: 500;
           font-size: 18px;
-          color: #dddddd;
+          color: $primary-color;
         }
         &Desc {
           font-weight: 500;
           font-size: 12px;
-          color: #aaaaaa;
+          color: $secondary-color;
         }
       }
 
       .AirportFlights {
         font-weight: 500;
         font-size: 12px;
-        color: #aaaaaa;
+        color: $secondary-color;
         white-space: nowrap;
       }
     }
@@ -298,7 +298,7 @@ label {
   #flightCount {
     padding: 0px 8px 8px 8px;
     font-weight: 500;
-    color: #aaaaaa;
+    color: $secondary-color;
   }
   &.Hidden {
     opacity: 0;
@@ -324,13 +324,13 @@ label {
   &_Code {
     font-size: 24px;
     font-weight: 500;
-    color: #dddddd;
+    color: $primary-color;
     margin-bottom: -4px;
   }
   &_Name {
     font-size: 12px;
     font-weight: 500;
-    color: #aaaaaa;
+    color: $secondary-color;
   }
   .Switch_Wrapper {
     padding: 0 8px;
@@ -345,7 +345,7 @@ label {
     .Option {
       text-align: center;
       font-weight: 600;
-      color: #aaaaaa;
+      color: $secondary-color;
       background-color: #1f1f1f;
       border-radius: 4px;
       width: 100%;
@@ -354,7 +354,7 @@ label {
       cursor: pointer;
       &.Selected {
         background-color: #2a2a2a;
-        color: #dddddd;
+        color: $primary-color;
       }
     }
   }
@@ -392,7 +392,7 @@ label {
     }
     &_Name {
       font-weight: 500;
-      color: #dddddd;
+      color: $primary-color;
       font-size: 16px;
       white-space: nowrap;
       max-width: 50%;
@@ -405,7 +405,7 @@ label {
       border-radius: 4px;
       padding: 1px 8px;
       font-size: 12px;
-      color: #aaaaaa;
+      color: $secondary-color;
       font-weight: 500;
     }
     &_Destination {

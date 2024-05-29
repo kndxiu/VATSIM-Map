@@ -239,18 +239,15 @@ const displayAirportDetails = (airport) => {
       const el = document.createElement("div");
       el.addEventListener("click", () => {
         const pos = L.latLng(flight["latitude"], flight["longitude"]);
-        map.flyTo(pos);
+        map.setView(pos, map.getZoom());
         if (markers[flight["cid"]]) {
-          active = markers[flight["cid"]]["marker"];
-          active._icon.classList.add("active");
-          active = markers[flight["cid"]]["marker"];
+          markers[flight["cid"]]["marker"].fire("click");
+          markers[flight["cid"]]["marker"].closeTooltip();
         } else {
-          if (active && active._icon) active._icon.classList.remove("active");
-          active = createMarker(flight, pos, true);
+          active = L.marker(pos, {
+            id: flight["cid"],
+          });
         }
-        toggleVisibility([airportDetails], false);
-        updateContent(flight);
-        setDetailsVisibility(true);
       });
       el.classList.add("AirportDetails_Item");
       const content = `
@@ -408,6 +405,8 @@ const init = () => {
     if (e.keyCode == 13 && search.value.length > 0) {
       toggleVisibility([searchResults], true);
       toggleVisibility([details, detailsSmall, airportDetails], false);
+      if (active && active._icon) active._icon.classList.remove("active");
+      active = null;
       const query = search.value;
       const results = Object.values(airports).filter(
         (airport) =>
@@ -523,7 +522,7 @@ const updateUI = () => {
   playerCount2.innerHTML = `${data["general"]["unique_users"]}`;
 };
 
-const createMarker = (pilot, pos, _return = false) => {
+const createMarker = (pilot, pos) => {
   const id = pilot["cid"];
   const heading = pilot["heading"];
   const name = pilot["name"];
@@ -561,50 +560,6 @@ const createMarker = (pilot, pos, _return = false) => {
     forceZIndex: 200,
   });
   if (!markers[id]) {
-    if (!_return) marker.addTo(map);
-    else return marker;
-    if (active && id === active.options.id) {
-      active = marker;
-      active._icon.classList.add("active");
-    }
-    if (pilot["transponder"] == "7600" || pilot["transponder"] == "7700") {
-      marker._icon.classList.add("sq");
-    }
-    const obj = {
-      data: pilot,
-      marker,
-    };
-    markers[id] = obj;
-
-    if (!isMobile) {
-      const content = `
-        <div class="Main">
-          <div class="Row">
-            <span class="Name">${name.slice(0, -5)}</span>
-            <span class="Callsign">${callsign}</span>
-          </div>
-          <div class="Row">
-            <div class="Departure">
-              <label>FROM</label>
-              <span class="Waypoint">${dep}</span>
-            </div>
-            <div class="Arrival">
-              <label>TO</label>
-              <span class="Waypoint">${arr}</span>
-            </div>
-          </div>
-          </div>
-        <span class="Expand">CLICK TO EXPAND</span>
-      `;
-
-      marker.bindTooltip(content, {
-        // sticky: true,
-        direction: "top",
-        className: "Tooltip",
-        offset: [0, -8],
-        opacity: 1,
-      });
-    }
     marker.addEventListener("click", () => {
       if (active && active._icon) active._icon.classList.remove("active");
 
@@ -685,6 +640,50 @@ const createMarker = (pilot, pos, _return = false) => {
       // TODO:
       // map.flyTo(position);
     });
+    marker.addTo(map);
+    if (active && id === active.options.id) {
+      active = marker;
+      active._icon.classList.add("active");
+      marker.fire("click");
+    }
+    if (pilot["transponder"] == "7600" || pilot["transponder"] == "7700") {
+      marker._icon.classList.add("sq");
+    }
+    const obj = {
+      data: pilot,
+      marker,
+    };
+    markers[id] = obj;
+
+    if (!isMobile) {
+      const content = `
+        <div class="Main">
+          <div class="Row">
+            <span class="Name">${name.slice(0, -5)}</span>
+            <span class="Callsign">${callsign}</span>
+          </div>
+          <div class="Row">
+            <div class="Departure">
+              <label>FROM</label>
+              <span class="Waypoint">${dep}</span>
+            </div>
+            <div class="Arrival">
+              <label>TO</label>
+              <span class="Waypoint">${arr}</span>
+            </div>
+          </div>
+          </div>
+        <span class="Expand">CLICK TO EXPAND</span>
+      `;
+
+      marker.bindTooltip(content, {
+        // sticky: true,
+        direction: "top",
+        className: "Tooltip",
+        offset: [0, -8],
+        opacity: 1,
+      });
+    }
   }
 };
 
