@@ -47,6 +47,10 @@ html {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  width: 100dvw;
+  height: 100dvh;
+  max-width: 100dvw;
+  max-height: 100dvh;
 }
 
 .Info {
@@ -61,12 +65,11 @@ html {
 }
 
 .Hud {
-  position: absolute;
-  top: -100vh;
+  position: fixed;
+  top: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  position: relative;
   z-index: 400;
   pointer-events: none;
   transition: 0.2s ease;
@@ -344,7 +347,7 @@ label {
   max-width: 300px;
   padding: 0;
   display: flex;
-  max-height: calc(100svh - 48px - 2rem);
+  max-height: calc(100svh - 56px - 2rem);
   flex-direction: column;
   transition: 0.2s ease;
   opacity: 1;
@@ -510,7 +513,7 @@ input::placeholder {
   font-weight: 600;
 }
 .Details.Hidden {
-  bottom: -100%;
+  bottom: calc(-500px - 100%);
 }
 .Details .Header {
   width: 100%;
@@ -773,4 +776,4 @@ button:hover {
   .Loading {
     top: calc(1rem + 48px + 8px) !important;
   }
-}/*# sourceMappingURL=style.css.map */
+}
