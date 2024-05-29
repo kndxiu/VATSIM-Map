@@ -510,7 +510,7 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  bottom: calc(0.001svh + 1rem);
+  bottom: calc(0.001svh + 16px);
   font-weight: 600;
 }
 .Details.Hidden {
@@ -535,7 +535,7 @@ input::placeholder {
   max-width: 420px;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(0.001svh + 1rem);
+  bottom: calc(0.001svh + 48px);
   transition: 0.2s ease;
   width: calc(100% - 32px);
   padding: unset;

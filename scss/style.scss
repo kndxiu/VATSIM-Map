@@ -444,7 +444,7 @@ input {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  bottom: calc(0.001svh + 1rem);
+  bottom: calc(0.001svh + 16px);
   font-weight: 600;
   &.Hidden {
     bottom: calc(-500px - 100%);
@@ -460,7 +460,7 @@ input {
   &-Small {
     @include box-styles;
     @include position-center;
-    bottom: calc(0.001svh + 1rem);
+    bottom: calc(0.001svh + 48px);
     transition: 0.2s ease;
     width: $width;
 
