@@ -47,10 +47,6 @@ html {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  width: 100svw;
-  height: 100svh;
-  max-width: 100svw;
-  max-height: 100svh;
 }
 
 .Info {
@@ -510,11 +506,11 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  bottom: calc(0.001svh + 16px);
+  bottom: 1rem;
   font-weight: 600;
 }
 .Details.Hidden {
-  bottom: calc(-500px - 100%);
+  bottom: -100%;
 }
 .Details .Header {
   width: 100%;
@@ -535,7 +531,7 @@ input::placeholder {
   max-width: 420px;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(0.001svh + 48px);
+  bottom: 1rem;
   transition: 0.2s ease;
   width: calc(100% - 32px);
   padding: unset;

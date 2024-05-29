@@ -26,10 +26,6 @@ html {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  width: 100svw;
-  height: 100svh;
-  max-width: 100svw;
-  max-height: 100svh;
 }
 
 .Info {
@@ -444,10 +440,10 @@ input {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  bottom: calc(0.001svh + 16px);
+  bottom: 1rem;
   font-weight: 600;
   &.Hidden {
-    bottom: calc(-500px - 100%);
+    bottom: -100%;
   }
   .Header {
     width: 100%;
@@ -460,7 +456,7 @@ input {
   &-Small {
     @include box-styles;
     @include position-center;
-    bottom: calc(0.001svh + 48px);
+    bottom: 1rem;
     transition: 0.2s ease;
     width: $width;
 
