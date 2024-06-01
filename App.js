@@ -47,6 +47,28 @@ airportSwitch.querySelectorAll(".Option").forEach((option) => {
   });
 });
 
+origin.addEventListener("click", () => {
+  const icao = origin.textContent;
+  const airport = airports[icao];
+  if (airport) {
+    const pos = L.latLng(airport["lat"], airport["lon"]);
+    map.setView(pos, map.getZoom());
+    displayAirportDetails(airport);
+    toggleVisibility([details], false);
+  }
+});
+
+destination.addEventListener("click", () => {
+  const icao = destination.textContent;
+  const airport = airports[icao];
+  if (airport) {
+    const pos = L.latLng(airport["lat"], airport["lon"]);
+    map.setView(pos, map.getZoom());
+    displayAirportDetails(airport);
+    toggleVisibility([details], false);
+  }
+});
+
 let tracking = false;
 let lastPos;
 
