@@ -669,6 +669,7 @@ input::placeholder {
   font-size: 32px;
   line-height: 28px;
   color: #dddddd;
+  cursor: pointer;
 }
 
 .Progress {
@@ -776,4 +777,4 @@ button:hover {
   .Loading {
     top: calc(1rem + 48px + 8px) !important;
   }
-}
+}/*# sourceMappingURL=style.css.map */

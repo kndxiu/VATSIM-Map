@@ -432,9 +432,11 @@ const init = () => {
       const query = search.value;
       const results = Object.values(airports).filter(
         (airport) =>
-          airport.icao.toLowerCase().startsWith(query.toLowerCase()) &&
+          (airport.icao.toLowerCase().startsWith(query.toLowerCase()) ||
+            airport.name.toLowerCase().startsWith(query.toLowerCase())) &&
           getAirportFlights(airport.icao).length > 0
       );
+
       searchResults.innerHTML = "";
       if (results.length != 0) {
         results.forEach((airport) => {
