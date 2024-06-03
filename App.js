@@ -423,8 +423,8 @@ const init = () => {
   map.addEventListener("moveend", handleMoveEnd);
   map.addEventListener("click", handleClick);
 
-  search.addEventListener("keydown", (e) => {
-    if (e.keyCode == 13 && search.value.length > 0) {
+  search.addEventListener("keyup", (e) => {
+    if (search.value.length > 0) {
       toggleVisibility([searchResults], true);
       toggleVisibility([details, detailsSmall, airportDetails], false);
       if (active && active._icon) active._icon.classList.remove("active");
@@ -470,6 +470,8 @@ const init = () => {
           searchResults.appendChild(el);
         });
       } else searchResults.innerHTML = "<label>No results</label>";
+    } else {
+      toggleVisibility([searchResults], false);
     }
   });
 };
