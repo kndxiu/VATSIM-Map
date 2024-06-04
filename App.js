@@ -47,12 +47,34 @@ airportSwitch.querySelectorAll(".Option").forEach((option) => {
   });
 });
 
+const resetActiveMarker = () => {
+  if (active) active.setForceZIndex(200);
+  active = null;
+  tracking = null;
+  toggleVisibility([hud], true);
+};
+
+const resetAirportMarkers = () => {
+  if (departure) {
+    departure.remove();
+    departure = null;
+    airportMarkers = [];
+  }
+  if (arrival) {
+    arrival.remove();
+    arrival = null;
+    airportMarkers = [];
+  }
+};
+
 origin.addEventListener("click", () => {
   const icao = origin.textContent;
   const airport = airports[icao];
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
     map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
+    resetActiveMarker();
+    resetAirportMarkers();
     displayAirportDetails(airport);
     toggleVisibility([details], false);
   }
@@ -64,6 +86,8 @@ destination.addEventListener("click", () => {
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
     map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
+    resetActiveMarker();
+    resetAirportMarkers();
     displayAirportDetails(airport);
     toggleVisibility([details], false);
   }
@@ -401,25 +425,6 @@ const init = () => {
     toggleVisibility([searchResults, airportDetails], false);
   };
 
-  const resetActiveMarker = () => {
-    if (active) active.setForceZIndex(200);
-    active = null;
-    tracking = null;
-    toggleVisibility([hud], true);
-  };
-
-  const resetAirportMarkers = () => {
-    if (departure) {
-      departure.remove();
-      departure = null;
-      airportMarkers = [];
-    }
-    if (arrival) {
-      arrival.remove();
-      arrival = null;
-      airportMarkers = [];
-    }
-  };
   map.addEventListener("moveend", handleMoveEnd);
   map.addEventListener("click", handleClick);
 
