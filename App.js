@@ -52,7 +52,7 @@ origin.addEventListener("click", () => {
   const airport = airports[icao];
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
-    map.setView(pos, map.getZoom());
+    map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
     displayAirportDetails(airport);
     toggleVisibility([details], false);
   }
@@ -63,7 +63,7 @@ destination.addEventListener("click", () => {
   const airport = airports[icao];
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
-    map.setView(pos, map.getZoom());
+    map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
     displayAirportDetails(airport);
     toggleVisibility([details], false);
   }
