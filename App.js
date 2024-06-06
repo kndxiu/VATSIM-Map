@@ -72,7 +72,8 @@ origin.addEventListener("click", () => {
   const airport = airports[icao];
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
-    map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
+    map.setView(pos, map.getZoom() > 8 ? map.getZoom() : 8);
+    if (active && active._icon) active._icon.classList.remove("active");
     resetActiveMarker();
     resetAirportMarkers();
     displayAirportDetails(airport);
@@ -85,7 +86,8 @@ destination.addEventListener("click", () => {
   const airport = airports[icao];
   if (airport) {
     const pos = L.latLng(airport["lat"], airport["lon"]);
-    map.setView(pos, map.getZoom() <= 8 ? map.getZoom() : 8);
+    map.setView(pos, map.getZoom() > 8 ? map.getZoom() : 8);
+    if (active && active._icon) active._icon.classList.remove("active");
     resetActiveMarker();
     resetAirportMarkers();
     displayAirportDetails(airport);
